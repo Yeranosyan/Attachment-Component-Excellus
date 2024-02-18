@@ -1,6 +1,7 @@
 import { Input, MenuButton, Option, Select } from "@pega/cosmos-react-core";
 import * as React from "react";
 import { Button } from "@pega/cosmos-react-core";
+import { IoMdClose } from "react-icons/io";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -8,6 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import FileFromDevice from "./FileFromDevice";
+import AttachmentTabular from "./AttachmentTabular";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -27,8 +29,6 @@ const MenuButtonAction = () => {
 
   const handleClose = () => {
     setOpen(false);
-  };
-  const handleCloseUrl = () => {
     setOpenUrl(false);
   };
 
@@ -76,7 +76,7 @@ const MenuButtonAction = () => {
         >
           <p> Attach file(s)</p>
           <p onClick={handleClose} style={{ cursor: "pointer", color: "gray" }}>
-            X
+            <IoMdClose />
           </p>
         </DialogTitle>
         <DialogContent>
@@ -84,6 +84,10 @@ const MenuButtonAction = () => {
             {<FileFromDevice />}
           </DialogContentText>
         </DialogContent>
+
+        {/* Select files manually tabular view */}
+        <div style={{ textAlign: "center" }}> {<AttachmentTabular />}</div>
+
         <DialogActions
           style={{
             display: "flex",
@@ -104,7 +108,7 @@ const MenuButtonAction = () => {
         fullWidth="md"
         maxWidth="md"
         open={openUrl}
-        onClose={handleCloseUrl}
+        onClose={handleClose}
         PaperProps={{
           component: "form",
           onSubmit: (event) => {
@@ -121,11 +125,8 @@ const MenuButtonAction = () => {
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           <p>Attach a link</p>
-          <p
-            onClick={handleCloseUrl}
-            style={{ cursor: "pointer", color: "gray" }}
-          >
-            X
+          <p onClick={handleClose} style={{ cursor: "pointer", color: "gray" }}>
+            <IoMdClose />
           </p>
         </DialogTitle>
         <DialogContent>
@@ -180,7 +181,7 @@ const MenuButtonAction = () => {
             margin: "40px",
           }}
         >
-          <Button onClick={handleCloseUrl} variant="simple">
+          <Button onClick={handleClose} variant="simple">
             Cancel
           </Button>
           <Button type="submit" variant="primary">
