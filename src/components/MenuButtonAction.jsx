@@ -9,7 +9,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import FileFromDevice from "./FileFromDevice";
-import AttachmentTabular from "./AttachmentTabular";
+import TabularView from "./TabularView";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -18,6 +18,16 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const MenuButtonAction = () => {
   const [open, setOpen] = React.useState(false);
   const [openUrl, setOpenUrl] = React.useState(false);
+  const [filess, setFiles] = React.useState([]);
+
+  React.useEffect(() => {
+    console.log("files changed");
+    console.log(filess);
+  }, [filess]);
+
+  React.useEffect(() => {
+    console.log("Mounted");
+  }, []);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -48,6 +58,19 @@ const MenuButtonAction = () => {
       return handleClickOpen();
     } else handleClickOpenUrl();
   };
+
+  const addNewFile = (filesToAdd, existingFiles) => {
+    console.log("addNewFile");
+    console.log(filess);
+    console.log(existingFiles);
+    console.log(filesToAdd);
+    console.log("addNewFile.close");
+    //setFiles([...files, ...filesToAdd]);
+    setFiles([...existingFiles, ...filesToAdd]);
+  };
+
+  console.log("files");
+  console.log(filess);
 
   return (
     <>
@@ -81,12 +104,15 @@ const MenuButtonAction = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {<FileFromDevice />}
+            {<FileFromDevice existingFiles={filess} addNewFile={addNewFile} />}
           </DialogContentText>
         </DialogContent>
 
         {/* Select files manually tabular view */}
-        <div style={{ textAlign: "center" }}> {<AttachmentTabular />}</div>
+        <div style={{ textAlign: "center" }}>
+          {" "}
+          {<TabularView files={filess} />}
+        </div>
 
         <DialogActions
           style={{

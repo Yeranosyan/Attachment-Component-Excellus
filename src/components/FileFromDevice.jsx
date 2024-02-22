@@ -1,4 +1,11 @@
-import { useState, useMemo, useCallback, useRef, useContext } from "react";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+  useContext,
+} from "react";
 import {
   FileInput,
   createUID,
@@ -6,7 +13,7 @@ import {
 } from "@pega/cosmos-react-core";
 import { FileServiceContext } from "@pega/cosmos-react-demos/lib/work/CaseView/FileService.mock";
 
-const FileFromDevice = () => {
+const FileFromDevice = ({ existingFiles, addNewFile }) => {
   const { files, attachFile, cancelFile, deleteFile } =
     useContext(FileServiceContext);
   const errCounts = useRef({ invalidType: 0, invalidSize: 0 });
@@ -25,23 +32,28 @@ const FileFromDevice = () => {
         return isValidSize;
       });
       setHasError(newFiles.length < addedFiles.length);
+      const filesToAdd = [];
       newFiles.forEach((File) => {
         const id = createUID();
-        attachFile({
+        const newFile = {
           id,
           thumbnail: File.type.startsWith("image")
             ? URL.createObjectURL(File)
             : undefined,
-          name: File.name,
+          name: File.name.split(".")[0],
+          fullName: File.name,
           category: "",
           File,
           onCancel: () => {
             cancelFile(id);
           },
-        });
+        };
+        attachFile(newFile);
+        filesToAdd.push(newFile);
       });
+      addNewFile(filesToAdd, existingFiles);
     },
-    [attachFile, cancelFile, sizeLimit]
+    [addNewFile, attachFile, cancelFile, existingFiles, sizeLimit]
   );
 
   useAfterInitialEffect(() => {
@@ -55,6 +67,11 @@ const FileFromDevice = () => {
         )
       : null;
   }, [hasError, sizeLimit]);
+
+  useEffect(() => {
+    console.log("existingFiles changed");
+    console.log(existingFiles);
+  }, [existingFiles]);
 
   return (
     <FileInput
