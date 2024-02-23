@@ -6,6 +6,7 @@ import {
   useRef,
   useContext,
 } from "react";
+import PropTypes from "prop-types";
 import {
   FileInput,
   createUID,
@@ -96,6 +97,11 @@ const FileFromDevice = ({ existingFiles, addNewFile }) => {
       })}
     />
   );
+};
+
+FileFromDevice.propTypes = {
+  existingFiles: PropTypes.array.isRequired,
+  addNewFile: PropTypes.func.isRequired,
 };
 
 export default FileFromDevice;

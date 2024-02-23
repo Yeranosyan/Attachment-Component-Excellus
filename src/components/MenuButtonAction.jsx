@@ -18,12 +18,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const MenuButtonAction = () => {
   const [open, setOpen] = React.useState(false);
   const [openUrl, setOpenUrl] = React.useState(false);
-  const [filess, setFiles] = React.useState([]);
+  const [files, setFiles] = React.useState([]);
 
   React.useEffect(() => {
     console.log("files changed");
-    console.log(filess);
-  }, [filess]);
+    console.log(files);
+  }, [files]);
 
   React.useEffect(() => {
     console.log("Mounted");
@@ -61,16 +61,16 @@ const MenuButtonAction = () => {
 
   const addNewFile = (filesToAdd, existingFiles) => {
     console.log("addNewFile");
-    console.log(filess);
+    console.log(files);
     console.log(existingFiles);
     console.log(filesToAdd);
     console.log("addNewFile.close");
-    //setFiles([...files, ...filesToAdd]);
+
     setFiles([...existingFiles, ...filesToAdd]);
   };
 
   console.log("files");
-  console.log(filess);
+  console.log(files);
 
   return (
     <>
@@ -104,14 +104,14 @@ const MenuButtonAction = () => {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {<FileFromDevice existingFiles={filess} addNewFile={addNewFile} />}
+            {<FileFromDevice existingFiles={files} addNewFile={addNewFile} />}
           </DialogContentText>
         </DialogContent>
 
         {/* Select files manually tabular view */}
         <div style={{ textAlign: "center" }}>
           {" "}
-          {<TabularView files={filess} />}
+          {<TabularView files={files} />}
         </div>
 
         <DialogActions

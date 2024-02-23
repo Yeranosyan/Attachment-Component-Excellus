@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BsTrash3 } from "react-icons/bs";
+import PropTypes from "prop-types";
 
 const TabularView = ({ files }) => {
   const [tableResults, setTableResults] = useState(files);
@@ -9,17 +10,27 @@ const TabularView = ({ files }) => {
     setSelectedCategory(event.target.value);
   };
 
-  const handleNameChange = (event, file) => {
-    const selectedFile = tableResults.find((t) => t.id === file.id);
-    selectedFile.name = event.target.value;
-    const results = tableResults.filter((t) => t.id !== file.id);
-    setTableResults([selectedFile, ...results]);
+  const handleNameChange = (event, fileId) => {
+    const updatedFiles = tableResults.map((file) => {
+      if (file.id === fileId) {
+        return {
+          ...file,
+          name: event.target.value,
+        };
+      }
+      return file;
+    });
+    setTableResults(updatedFiles);
+  };
+
+  // Delete file from table
+  const handleDeleteFile = (fileId) => {
+    const updatedFiles = tableResults.filter((file) => file.id !== fileId);
+    setTableResults(updatedFiles);
   };
 
   useEffect(() => {
-    console.log("files fired");
-    console.log(files);
-    setTableResults([...files]);
+    setTableResults(files);
   }, [files]);
 
   return (
@@ -28,6 +39,7 @@ const TabularView = ({ files }) => {
         maxWidth: "840px",
         margin: "2rem auto",
         overflowX: "auto",
+        maxHeight: "220px", // Set maximum height for scroll (can change how it's looks)
       }}
     >
       <table
@@ -43,7 +55,12 @@ const TabularView = ({ files }) => {
               border: "1px solid lightgray",
             }}
           >
-            <th style={{ border: "1px solid lightgray", padding: "0.5rem" }}>
+            <th
+              style={{
+                border: "1px solid lightgray",
+                padding: "0.5rem",
+              }}
+            >
               Name<span style={{ color: "red" }}>*</span>
             </th>
             <th style={{ border: "1px solid lightgray" }}>File</th>
@@ -57,14 +74,13 @@ const TabularView = ({ files }) => {
           </tr>
         </thead>
         <tbody>
+          {/* Assign unique key key={file.id} for table issue */}
           {tableResults.map((file) => (
             <tr key={file.id}>
-              {" "}
-              {/* Assign unique key */}
               <td style={{ padding: "0.5rem" }}>
                 <input
                   value={file.name}
-                  onChange={(event) => handleNameChange(event, file)}
+                  onChange={(event) => handleNameChange(event, file.id)}
                   style={{ borderRadius: "5px", width: "90%", padding: "5px" }}
                 />
               </td>
@@ -84,12 +100,17 @@ const TabularView = ({ files }) => {
               </td>
               <td></td>
               <td style={{ textAlign: "center" }}>
-                <BsTrash3
-                  style={{
-                    color: "lightblue",
-                    fontSize: "1rem",
-                  }}
-                />
+                <button
+                  onClick={() => handleDeleteFile(file.id)}
+                  style={{ border: "none", cursor: "pointer" }}
+                >
+                  <BsTrash3
+                    style={{
+                      color: "lightblue",
+                      fontSize: "1rem",
+                    }}
+                  />
+                </button>
               </td>
             </tr>
           ))}
@@ -97,6 +118,10 @@ const TabularView = ({ files }) => {
       </table>
     </div>
   );
+};
+
+TabularView.propTypes = {
+  files: PropTypes.array.isRequired,
 };
 
 export default TabularView;
